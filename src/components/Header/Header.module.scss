@@ -20,10 +20,17 @@
 }
 
 .header-cart {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  svg {
-    margin-right: 5px;
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    cursor: pointer;
+    color: inherit;
+    border: none;
+
+    svg {
+      margin-right: 5px;
+    }
   }
 }
