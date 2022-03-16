@@ -1,10 +1,24 @@
+@import "@styles/settings/__settings";
+
 .Button {
   font-size: 16px;
   border: 0;
   color: #fff;
-  background: #4faf43;
+  background: $color-brand-green;
   padding: 10px 12px;
   text-transform: uppercase;
-  font-weight: bold;
+  font-family: $title-font-family;
+  font-weight: $title-font-weight;
   cursor: pointer;
+
+  &:hover {
+    background-color: lighten($color-brand-green, 10);
+    transform: translateY(-3px);
+    transition: transform 0.2s;
+  }
+
+  &:active {
+    transform: translateY(3px) scaleY(0.8) scaleX(1.2);
+    transition: transform 0.1s;
+  }
 }

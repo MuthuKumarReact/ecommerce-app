@@ -1,6 +1,8 @@
+@import "@styles/settings/__settings";
+
 .header {
   width: 100%;
-  background-color: blue;
+  background-color: $color-brand-blue;
   color: #fff;
   padding: 0.5em 0;
 
@@ -17,6 +19,9 @@
 
 .header-title {
   font-size: 32px;
+  font-family: $title-font-family;
+  font-weight: $title-font-weight;
+  color: $color-brand-yellow;
 }
 
 .header-cart {
@@ -30,6 +35,7 @@
     border: none;
 
     svg {
+      color: $color-brand-yellow;
       margin-right: 5px;
     }
   }

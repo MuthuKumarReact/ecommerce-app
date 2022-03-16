@@ -4,7 +4,7 @@ const Button = ({ children, className, ...rest }) => {
   let className_ = styles.Button;
 
   if (className) {
-    className_ = `${styles.Button} ${className}`;
+    className_ = `${className_} ${className}`;
   }
   return (
     <button className={className_} {...rest}>

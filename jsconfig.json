@@ -4,6 +4,7 @@
       "@styles/*": ["src/styles/*"],
       "@components/*": ["src/components/*"],
       "@data/*": ["src/data/*"],
+      "@hooks/*": ["src/hooks/*"]
     },
     "baseUrl": "./"
   }

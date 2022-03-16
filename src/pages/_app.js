@@ -1,7 +1,12 @@
-import '@styles/globals.scss'
+import { SnipCartProvider } from "@hooks/use_sinpcart";
+import "@styles/globals.scss";
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return (
+    <SnipCartProvider>
+      <Component {...pageProps} />
+    </SnipCartProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;
