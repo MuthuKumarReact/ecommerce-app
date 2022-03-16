@@ -2,15 +2,15 @@
 import Head from "next/head";
 import Image from "next/image";
 
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
+
 import Header from "@components/Header";
 
 import styles from "@styles/Home.module.scss";
 import Container from "@components/Container";
 import Button from "@components/Button";
 
-import products from "@data/products.json";
-
-export default function Home() {
+export default function Home({ products }) {
   return (
     <div>
       <Head>
@@ -37,12 +37,12 @@ export default function Home() {
               return (
                 <li key={product.id}>
                   <Image
-                    width="230"
-                    height="230"
-                    src={product.image}
-                    alt={`Card for ${product.title}`}
+                    width={product.image.width}
+                    height={product.image.height}
+                    src={product.image.src}
+                    alt={`Card for ${product.product_title}`}
                   />
-                  <h3 className={styles["productTitle"]}>{product.title}</h3>
+                  <h3 className={styles["productTitle"]}>{product.product_title}</h3>
                   <p className={styles["productPrice"]}>${product.price}</p>
                   <p>
                     <Button
@@ -51,8 +51,8 @@ export default function Home() {
                       data-item-price={product.price}
                       data-item-url="/"
                       data-item-description=""
-                      data-item-image={product.image}
-                      data-item-name={product.title}
+                      data-item-image={product.image.src}
+                      data-item-name={product.product_title}
                     >
                       Add to cart
                     </Button>
@@ -78,4 +78,38 @@ export default function Home() {
       />
     </div>
   );
+}
+
+export async function getStaticProps() {
+  const client = new ApolloClient({
+    uri: "https://ecommerce-app-test.hasura.app/v1/graphql",
+    headers: {
+      "x-hasura-admin-secret": process.env.NEXT_HASURA_ADMIN_SECRET
+    },
+    cache: new InMemoryCache(),
+  });
+
+  const response = await client.query({
+    query: gql`
+      query allProducts {
+        products {
+          id
+          price
+          image {
+            src
+            width
+            height
+          }
+          product_title
+        }
+      }
+    `,
+  });
+
+  const products = response.data.products;
+  return {
+    props: {
+      products,
+    },
+  };
 }
