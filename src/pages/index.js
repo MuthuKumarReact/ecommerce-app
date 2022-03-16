@@ -29,7 +29,7 @@ export default function Home() {
 
       <main>
         <Container>
-          <h1>MarketPlace</h1>
+          <h1>PlayStation</h1>
           <h2>Available Cards</h2>
 
           <ul className={styles["products"]}>
@@ -65,7 +65,7 @@ export default function Home() {
       </main>
 
       <footer className={styles.footer}>
-        &copy; MarketPlace {new Date().getFullYear()}
+        &copy; PlayStation {new Date().getFullYear()}
       </footer>
       <script
         async

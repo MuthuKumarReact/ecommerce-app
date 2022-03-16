@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <header className={styles["header"]}>
       <Container className={styles["header-container"]}>
-        <p className={styles["header-title"]}>Muthu&apos;s Store</p>
+        <p className={styles["header-title"]}>PlayStation&apos;s Store</p>
         <p className={styles["header-cart"]}>
           <button className="snipcart-checkout">
             <FaShoppingCart />
