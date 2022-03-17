@@ -1,9 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
+import { useState } from "react";
+
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
+import Fuse from "fuse.js";
 
 import Container from "@components/Container";
 import Button from "@components/Button";
@@ -11,7 +14,32 @@ import Layout from "@components/Layout";
 
 import styles from "@styles/Home.module.scss";
 
-export default function Home({ products }) {
+export default function Home({ products, allegiances }) {
+  const [activeAllegiance, setActiveAllegiance] = useState();
+  const [query, setQuery] = useState();
+
+  let activeProducts = products;
+
+  if (activeAllegiance) {
+    activeProducts = activeProducts.filter(
+      (list) => list.allegiance.slug === activeAllegiance
+    );
+  }
+
+  const fuse = new Fuse(activeProducts, {
+    keys: ["product_title", "allegiances.name"],
+  });
+
+  if (query) {
+    const results = fuse.search(query);
+    activeProducts = results.map(({ item }) => item);
+  }
+
+  function handleOnSearch(event) {
+    const value = event.currentTarget.value;
+    setQuery(value);
+  }
+
   return (
     <Layout>
       <Head>
@@ -20,14 +48,55 @@ export default function Home({ products }) {
       </Head>
       <Container>
         <h1 className="sr-only">PlayStation</h1>
-        <h2 className="sr-only">Available Cards</h2>
+        <div className={styles["discover"]}>
+          <div className={styles["allegiances"]}>
+            <h2>Filter by Allegiance</h2>
+            <ul>
+              {allegiances.map((allegiance) => {
+                const isActive = allegiance.slug === activeAllegiance;
+                let allegianceClassName;
+                if (isActive) {
+                  allegianceClassName = styles.allegianceIsActive;
+                }
+                return (
+                  <li key={allegiance.id}>
+                    <Button
+                      className={allegianceClassName}
+                      color="yellow"
+                      onClick={() => {
+                        setActiveAllegiance(allegiance.slug);
+                      }}
+                    >
+                      {allegiance.name}
+                    </Button>
+                  </li>
+                );
+              })}
+              <li>
+                <Button
+                  className={!activeAllegiance && styles.allegianceIsActive}
+                  color="yellow"
+                  onClick={() => setActiveAllegiance(undefined)}
+                >
+                  View All
+                </Button>
+              </li>
+            </ul>
+          </div>
+          <div className={styles["search-input"]}>
+            <h2>Search</h2>
+            <form>
+              <input onChange={handleOnSearch} type="search" />
+            </form>
+          </div>
+        </div>
         <ul className={styles["products"]}>
-          {products.map((product) => {
+          {activeProducts.map((product) => {
             return (
               <li key={product.id}>
                 <Link href={`/products/${product.slug}`}>
                   <a>
-                    <div className={styles['product-image']}>
+                    <div className={styles["product-image"]}>
                       <Image
                         width={product.image.width}
                         height={product.image.height}
@@ -84,16 +153,29 @@ export async function getStaticProps() {
             width
             height
           }
+          allegiance {
+            id
+            name
+            slug
+          }
           product_title
+        }
+
+        allegiances {
+          id
+          name
+          slug
         }
       }
     `,
   });
 
   const products = response.data.products;
+  const allegiances = response.data.allegiances;
   return {
     props: {
       products,
+      allegiances,
     },
   };
 }
